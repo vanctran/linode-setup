@@ -47,6 +47,23 @@ then
         linode-linode delete "proxygen"$COUNTER &
         let COUNTER=COUNTER+1
     done
+elif [ $1 == 'ip' ]
+then
+    echo -n "Enter the number of Proxygen servers: "
+    read TOTAL
+    echo -n "Enter your proxy port: "
+    read PORT
+    echo "Generating IP list..."
+
+    COUNTER=0
+    PREFIX="ips:"
+
+    while [ $COUNTER -lt $TOTAL ]; do
+        OUTPUT=$(linode show "proxygen"$COUNTER | tail -2 | head -1)
+        echo "${OUTPUT/$PREFIX/}:$PORT" | tr -d ' ' >> "./ip_list.txt"
+        let COUNTER=$COUNTER+1
+    done
+    echo
 else
     echo "Invalid argument. Please enter either create or delete."
 fi
