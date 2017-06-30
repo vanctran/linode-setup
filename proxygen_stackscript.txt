@@ -10,7 +10,7 @@ cat << EOT > /etc/squid/squid.conf
 # I take no responsibility for what you do with your proxies.
 
 # Replace with your own IP
-acl clients src 76.105.175.118
+acl clients src ENTER_YOUR_IP_HERE
 
 # Custom policies
 http_access allow clients
