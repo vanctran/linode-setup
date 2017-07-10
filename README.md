@@ -1,5 +1,11 @@
 # Proxygen
-Proxygen is a simple proxy management wrapper around the Linode client.
+Proxygen is a simple proxy management wrapper around the Linode-CLI to mass manage simple squid proxy servers.
+
+squid: http://www.squid-cache.org/
+
+Linode: https://www.linode.com/
+
+Linode-CLI: https://github.com/linode/cli
 
 ## Installation
 
