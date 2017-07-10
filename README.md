@@ -29,8 +29,8 @@ sudo ./setup.sh
 ## Changelog
 
 ### Version 1.1
-Added the delete proxygen servers command.
-Added the export IP/port list command.
+* Added the delete proxygen servers command.
+* Added the export IP/port list command.
 
 ### Version 1.0
-Allows creation of proxy servers through Linode.
+* Allows creation of proxy servers through Linode.
