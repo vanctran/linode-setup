@@ -28,6 +28,10 @@ sudo ./setup.sh
 
 ## Changelog
 
+### Version 1.2
+* Added a UI.
+* Updated to use the new Linode API v4.
+
 ### Version 1.1
 * Added the delete proxygen servers command.
 * Added the export IP/port list command.
