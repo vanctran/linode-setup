@@ -1,8 +1,8 @@
 #!/bin/bash
 
-CONFIG_READY=false
+CONFIG_READY=true
 NAME_PREFIX="proxygen"
-STACKSCRIPT_NAME=""
+STACKSCRIPT_ID=120512
 PASSWORD=""
 
 # Parameters (name prefix, port, min range, max range, filename)
@@ -36,11 +36,11 @@ create (){
 
     while [ $counter -lt $total ];
     do
-        linode create $NAME_PREFIX$id --stackscript "${STACKSCRIPT_NAME}" --stackscriptjson "{ }" --password "$PASSWORD" &
+        linode-cli create "-l" "$NAME_PREFIX$id" --stackscript $STACKSCRIPT_ID -P "$PASSWORD" &
         let counter=counter+1
         let id=id+1
+        sleep 0.6
     done
-    wait
 }
 
 delete (){
@@ -49,7 +49,7 @@ delete (){
     ((max++))
     while [ $counter -lt $max ];
     do
-        linode-linode delete $1$counter &
+        linode-cli delete $1$counter &
         let counter=counter+1
     done
     wait
@@ -91,6 +91,10 @@ menu (){
             tput bold
             echo -n "Enter the prefix to use in the name of the new proxy nodes: "
             read NAME_PREFIX
+            if [ $NAME_PREFIX == "" ]
+            then
+                NAME_PREFIX="proxygen"
+            fi
             echo -n "Enter the name of the stackscript you wish to run after server creation: "
             read STACKSCRIPT_NAME
             # Enter the root password of the new proxy servers.
@@ -171,15 +175,45 @@ then
     exit 1
 elif [ $1 == 'create' ]
 then
-    echo "Command line create not yet implemented."
+    name_prefix=$2
+    stackscript_id=$3
+    password=$4
+    id=$5
+    total=$6
+    counter=0
+
+    while [ $counter -lt $total ];
+    do
+        linode-cli create "-l" "$name_prefix$id" -S $stackscript_id -P "$password" &
+        let counter=counter+1
+        let id=id+1
+        sleep 1.5
+    done
+    wait
 elif [ $1 == 'delete' ]
 then
     # Enter the amount of proxy servers to delete.
     echo "Deleting Proxygen server $2"
-    linode-linode delete $2 &
+    linode-cli delete $2 &
 elif [ $1 == 'ip' ]
 then
-    echo "Command line IP retrieval not yet implemented."
+# Parameters (name prefix, port, min range, max range, filename)
+    name_prefix=$2
+    port=$3
+    id=$4
+    max=$5
+    file_name=$6
+    prefix="ips:"
+    counter=0
+
+    ((max++))
+    while [ $counter -lt $max ];
+    do
+        output=$(linode show $name_prefix$counter | tail -2 | head -1)
+        echo "${output/$prefix/}:$port" | tr -d ' ' >> "./$file_name"
+        let counter=$counter+1
+    done
+    echo
 else
     echo "Invalid argument. Please enter either create or delete."
 fi
